@@ -1,10 +1,24 @@
+import { useRef } from "react";
 import { Button } from "./Button";
 
-export const AddTaskForm = () => {
+type AddTaskFormProps = {
+  addTask: (title: string) => void;
+};
+
+export const AddTaskForm = ({ addTask }: AddTaskFormProps) => {
+  const taskInputRef = useRef<HTMLInputElement>(null);
   return (
     <div>
-      <input />
-      <Button title="+" />
+      <input ref={taskInputRef} />
+      <Button
+        title="+"
+        onClickHandler={() => {
+          if (taskInputRef.current) {
+            addTask(taskInputRef.current.value);
+            taskInputRef.current.value = "";
+          }
+        }}
+      />
     </div>
   );
 };

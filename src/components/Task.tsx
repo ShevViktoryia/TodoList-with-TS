@@ -1,14 +1,14 @@
 import { Button } from "./Button";
 
 export type TaskPropsType = {
-  id: number;
+  id: string;
   title: string;
   isDoing: boolean;
 };
 
 type curTaskPropsType = {
   task: TaskPropsType;
-  removeTask: (taskId: number) => void;
+  removeTask: (taskId: string) => void;
 };
 
 export const Task = (props: curTaskPropsType) => {
