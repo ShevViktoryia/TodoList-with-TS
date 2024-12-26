@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { Button } from "./Button";
 
 type AddTaskFormProps = {
@@ -6,19 +6,31 @@ type AddTaskFormProps = {
 };
 
 export const AddTaskForm = ({ addTask }: AddTaskFormProps) => {
-  const taskInputRef = useRef<HTMLInputElement>(null);
+  const [taskTitle, setTaskTitle] = useState("");
+  const isPossibleToAddTask = taskTitle.length && taskTitle.length <= 15;
+
+  const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setTaskTitle(e.currentTarget.value);
+  const onClickHandler = () => {
+    addTask(taskTitle);
+    setTaskTitle("");
+  };
+  const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) =>
+    e.key === "Enter" && onClickHandler();
+
   return (
     <div>
-      <input ref={taskInputRef} />
+      <input
+        value={taskTitle}
+        onChange={inputChangeHandler}
+        onKeyDown={onKeyDownHandler}
+      />
       <Button
         title="+"
-        onClickHandler={() => {
-          if (taskInputRef.current) {
-            addTask(taskInputRef.current.value);
-            taskInputRef.current.value = "";
-          }
-        }}
+        isDisabled={!isPossibleToAddTask}
+        onClickHandler={onClickHandler}
       />
+      {!isPossibleToAddTask && <div>Enter Task title (max 15 chars)</div>}
     </div>
   );
 };

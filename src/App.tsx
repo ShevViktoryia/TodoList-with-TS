@@ -13,6 +13,7 @@ function App() {
     { id: v1(), title: "Learn CSS", isDoing: false },
     { id: v1(), title: "Learn React", isDoing: true },
   ]);
+  const [error, setError] = useState<boolean>(false);
 
   const removeTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
@@ -33,10 +34,21 @@ function App() {
   const addTask = (title: string) => {
     const newTask: TaskPropsType = {
       id: v1(),
-      title: title,
+      title: title.trim(),
       isDoing: false,
     };
-    const nextState: Array<TaskPropsType> = [...tasks, newTask];
+    if (newTask.title) {
+      const nextState: Array<TaskPropsType> = [...tasks, newTask];
+      setTasks(nextState);
+    } else {
+      setError(true);
+    }
+  };
+
+  const changeTaskStatus = (taskId: string, newStatus: boolean) => {
+    const nextState: Array<TaskPropsType> = tasks.map((task) =>
+      task.id === taskId ? { ...task, isDoing: newStatus } : task
+    );
     setTasks(nextState);
   };
 
@@ -48,6 +60,8 @@ function App() {
         removeTask={removeTask}
         changeFilter={changeFilterHandler}
         addTask={addTask}
+        activeFilter={filter}
+        changeTaskStatus={changeTaskStatus}
       />
     </div>
   );
